@@ -9,6 +9,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
 /**
  * Created by khiemnd on 10/12/17.
@@ -18,6 +19,8 @@ abstract class BaseMapFragment: Fragment(), OnMapReadyCallback, GoogleMap.OnCame
     private var googleMap: GoogleMap? = null
 
     private var zoom: Float? = 0.0f
+
+    abstract fun onMapReady()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -29,10 +32,16 @@ abstract class BaseMapFragment: Fragment(), OnMapReadyCallback, GoogleMap.OnCame
     override fun onMapReady(map: GoogleMap?) {
         googleMap = map
         googleMap?.setOnCameraIdleListener(this)
+        onMapReady()
     }
 
     fun setZoom(zoom: Float) {
         this.zoom = zoom
+    }
+
+    fun addDefaultMarker(lat: Double, lng: Double) {
+        var latLng = LatLng(lat, lng)
+        googleMap?.addMarker(MarkerOptions().position(latLng))
     }
 
     fun moveCameraToLocation(location: LatLng, animate: Boolean, zoomEnable: Boolean) {
